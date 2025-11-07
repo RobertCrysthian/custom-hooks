@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
-import type { ArrayReturn, PrimaryReturn, TypeElement } from "./types/types";
+import type { ArrayReturn, PrimaryReturn, TypeElement, TypeStorage } from "./types/types";
 
-export default function useLocalStorage<T>(props: { key: string; typeElement: "array" }): ArrayReturn<T>;
-export default function useLocalStorage<T>(props: { key: string; typeElement: "primary" }): PrimaryReturn<T>;
+export default function useLocalStorage<T>(props: { key: string; typeElement: "array", storage: TypeStorage }): ArrayReturn<T>;
+export default function useLocalStorage<T>(props: { key: string; typeElement: "primary", storage: TypeStorage }): PrimaryReturn<T>;
 
-export default function useLocalStorage<T>(props: { key: string; typeElement: TypeElement }) {
-    const { key, typeElement } = props;
+export default function useLocalStorage<T>(props: {
+    key: string;
+    typeElement: TypeElement;
+    storage: TypeStorage
+}) {
+    const { key, typeElement, storage } = props;
     const [value, setValue] = useState<any>(typeElement === "array" ? [] : null);
 
     function set(v: any) {
-        localStorage.setItem(key, JSON.stringify(v));
+        storage === "localStorage" ? localStorage.setItem(key, JSON.stringify(v)) : sessionStorage.setItem(key, JSON.stringify(v));
         setValue(v);
     }
 
     function remove() {
-        localStorage.removeItem(key);
+        storage === "localStorage" ? localStorage.removeItem(key) : sessionStorage.removeItem(key);
         setValue(typeElement === "array" ? [] : null);
     }
 
@@ -35,7 +39,7 @@ export default function useLocalStorage<T>(props: { key: string; typeElement: Ty
     }
 
     useEffect(() => {
-        const item = localStorage.getItem(key);
+        const item = storage === "localStorage" ? localStorage.getItem(key) : sessionStorage.getItem(key);
         setValue(item ? JSON.parse(item) : typeElement === "array" ? [] : null);
     }, []);
 

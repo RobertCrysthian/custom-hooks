@@ -13,3 +13,4 @@ export type PrimaryReturn<T> = {
 };
 
 export type TypeElement = "primary" | "array";
+export type TypeStorage = "sessionStorage" | "localStorage"
