@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import type { ArrayReturn, PrimaryReturn, TypeElement, TypeStorage } from "./types/types";
-
-export default function useLocalStorage<T>(props: { key: string; typeElement: "array", storage: TypeStorage }): ArrayReturn<T>;
-export default function useLocalStorage<T>(props: { key: string; typeElement: "primary", storage: TypeStorage }): PrimaryReturn<T>;
+import type { TypeElement, TypeStorage } from "./types/types";
 
 export default function useLocalStorage<T>(props: {
     key: string;
@@ -10,16 +7,16 @@ export default function useLocalStorage<T>(props: {
     storage: TypeStorage
 }) {
     const { key, typeElement, storage } = props;
-    const [value, setValue] = useState<any>(typeElement === "array" ? [] : null);
+    const [value, setValue] = useState<string>("");
 
-    function set(v: any) {
-        storage === "localStorage" ? localStorage.setItem(key, JSON.stringify(v)) : sessionStorage.setItem(key, JSON.stringify(v));
+    function set(v: string) {
+        localStorage.setItem(key, JSON.stringify(v));
         setValue(v);
     }
 
     function remove() {
-        storage === "localStorage" ? localStorage.removeItem(key) : sessionStorage.removeItem(key);
-        setValue(typeElement === "array" ? [] : null);
+        localStorage.removeItem(key);
+        setValue("");
     }
 
     function incrementArray(item: T) {
@@ -37,6 +34,12 @@ export default function useLocalStorage<T>(props: {
             set(filtered);
         }
     }
+
+    // function editItemFromArray(identifier: string | null, val: string | number) {
+    // if (Array.isArray(value)) {
+    //     setValue(prev => prev.)
+    // }
+    // }
 
     useEffect(() => {
         const item = storage === "localStorage" ? localStorage.getItem(key) : sessionStorage.getItem(key);

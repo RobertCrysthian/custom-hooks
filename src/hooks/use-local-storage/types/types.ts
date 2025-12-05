@@ -12,5 +12,11 @@ export type PrimaryReturn<T> = {
     remove: () => void;
 };
 
-export type TypeElement = "primary" | "array";
+export type ObjectReturn<T> = {
+    value: T | null;
+    set: (value: T) => void;
+    remove: () => void;
+}
+
+export type TypeElement = "primary" | "array" | "object";
 export type TypeStorage = "sessionStorage" | "localStorage"
