@@ -37,7 +37,7 @@ export default function useArrayInLocalStorage<T extends string | Record<string,
         setArray(filteredArray)
     }
 
-    function editItemFromArray(key: keyof T | null, value: T, newValue: T) {
+    function editItemFromArray(key: keyof T | null, value: T[keyof T], newValue: T) {
         const arr = getItem();
         if (!arr) return;
 

@@ -1,122 +1,82 @@
-import { useEffect, useState } from "react";
-import useLocalStorage from "../hooks/use-local-storage/use-local-storage";
+import { useState } from "react";
 import useArrayInLocalStorage from "../hooks/use-local-storage/use-array-in-local-storage";
+import { userSchema } from "../hooks/use-zod-errors/schemas/user-schema";
+import { useZodErrors } from "../hooks/use-zod-errors/use-zod-errors";
 
-type VehicleType = {
+type PersonType = {
     id: number,
-    brand: string,
-    model: string
+    name: string,
+    age: number,
 }
 
+const defaultArray = [
+    {
+        id: 1,
+        name: "Ana",
+        age: 20
+    },
+    {
+        id: 2,
+        name: "Jorge",
+        age: 22
+    },
+    {
+        id: 3,
+        name: "Claudio",
+        age: 30
+    },
+    {
+        id: 4,
+        name: "Bruno",
+        age: 55
+    },
+    {
+        id: 5,
+        name: "Marcia",
+        age: 35
+    },
+    {
+        id: 6,
+        name: "Laura",
+        age: 55
+    },
+
+]
+
 export default function PageHome() {
-    const { decrementArray, editItemFromArray, getItem, incrementArray, localArray, setArray } = useArrayInLocalStorage("array")
+    // const { decrementArray, editItemFromArray, getItem, incrementArray, localArray, setArray } = useArrayInLocalStorage<PersonType>("array");
 
-    console.log(localArray);
+    const [data, setData] = useState({
+        name: "",
+        age: "",
+        gender: ""
+    })
 
-    useEffect(() => {
-        incrementArray({ name: "Pedro", age: 7 })
-    }, [])
+    const { errors, handleErrors } = useZodErrors(userSchema);
 
     return (
-        <main>
-
-        </main>
-        // <main className="w-full p-8 h-full flex flex-col items-center">
-        //     <h1 className="mb-2 font-bold text-2xl">useLocalStorage</h1>
-        //     <p className="mb-5">Usado para trabalhar com informações do localStorage mantendo seu estado sempre salvo e atualizado na memória!</p>
-        //     <section className="w-full flex justify-start gap-10">
-        //         <p>Salvar em:</p>
-        //         <div className="flex items-center">
-        //             <label>Local storage</label>
-        //             <input
-        //                 className="ml-2 w-5 h-5"
-        //                 type="radio"
-        //                 value={"localStorage"}
-        //                 defaultChecked
-        //                 name="storage"
-        //                 onChange={(e) => setStorage(e.target.value as TypeStorage)}
-        //             />
-        //         </div>
-        //         <div className="flex items-center">
-        //             <label>Session storage</label>
-        //             <input
-        //                 className="ml-2 w-5 h-5"
-        //                 type="radio"
-        //                 value={"sessionStorage"}
-        //                 name="storage"
-        //                 onChange={(e) => setStorage(e.target.value as TypeStorage)}
-        //             />
-        //         </div>
-        //     </section>
-        //     <div className="w-full mb-2 mt-13 flex flex-col items-start">
-        //         <p className="font-bold mb-2">typeElement = "array"</p>
-        //         <div className="flex justify-center flex-wrap gap-4 mb-5 pb-4">
-        //             <button
-        //                 className="border p-2 rounded-lg  cursor-pointer"
-        //                 onClick={() => vehicles.set(vehicleList)}
-        //             >Adicionar lista de items</button>
-        //             <button
-        //                 className="border p-2 rounded-lg  cursor-pointer"
-        //                 onClick={() => vehicles.incrementArray(newVehicle)}
-        //             >Adicionar novo item na lista
-        //             </button>
-
-        //             <button
-        //                 className="border p-2 rounded-lg  cursor-pointer"
-        //                 onClick={() => cardId && vehicles.removeFromArray("id", +cardId)}
-        //             >{"Remover item por id ->"}
-        //             </button>
-        //             <input
-        //                 className="p-2 rounded-lg w-[150px] border"
-        //                 placeholder="ID do card"
-        //                 value={cardId}
-        //                 onChange={(e) => setCardId(e.target.value)}
-        //             />
-        //             <button
-        //                 className="border p-2 rounded-lg  cursor-pointer"
-        //                 onClick={() => vehicles.remove()}
-        //             >Remover tudo
-        //             </button>
-        //         </div>
-
-        //         <div className="flex gap-5 justify-center flex-wrap">
-        //             {
-        //                 vehicles.value.length ?
-        //                     vehicles.value.map((vehicle) => (
-        //                         <div className=" border p-4 relative w-[250px]" key={vehicle.id}>
-        //                             <X className="absolute right-3 cursor-pointer" onClick={() => vehicles.removeFromArray("id", vehicle.id)} />
-        //                             <p>ID: {vehicle.id}</p>
-        //                             <p>MARCA: {vehicle.brand}</p>
-        //                             <p>MODELO: {vehicle.model}</p>
-        //                         </div>
-        //                     )) :
-        //                     <p className="text-gray-300">Clique no primeiro botão para adicionar a lista de items no localstorage e exibir aqui!</p>
-        //             }
-        //         </div>
-        //     </div>
-
-        //     <div className="w-full mb-2 mt-13 flex flex-col items-start">
-        //         <p className="font-bold mb-2">typeElement = "primary"</p>
-        //         <div className="flex justify-center flex-wrap gap-4 pb-4">
-        //             <input
-        //                 className="p-2 rounded-lg border"
-        //                 placeholder="Digite o nome do veículo"
-        //                 value={vehicle.value || ""}
-        //                 onChange={(e) => vehicle.set(e.target.value)}
-        //             />
-        //             <button
-        //                 className="border p-2 rounded-lg  cursor-pointer"
-        //                 onClick={() => vehicle.remove()}
-        //             >{"Remover item"}
-        //             </button>
-        //         </div>
-        //         <p className="font-bold text-2xl">Veículo: {vehicle.value}</p>
-        //     </div>
-
-        //     <div className="w-full mb-2 mt-13 flex flex-col items-start">
-        //         <p className="font-bold mb-2">typeElement = "object"</p>
-        //         <p>WIP</p>
-        //     </div>
-        // </main>
+        <main className="w-full flex flex-col items-center justify-center min-h-screen">
+            <section className="w-[30%] flex flex-col items-center gap-10">
+                <div className="mb-4 w-full">
+                    <label className="pl-2">Nome</label>
+                    <input value={data.name} onChange={(e) => setData({ ...data, name: e.target.value })} className="border w-full p-3 rounded-lg" placeholder="Informe o nome" />
+                    <p>{errors.name}</p>
+                </div>
+                <div className="mb-4 w-full">
+                    <label className="pl-2">Idade</label>
+                    <input value={data.age} onChange={(e) => setData({ ...data, age: e.target.value })} className="border w-full p-3 rounded-lg" placeholder="Informe a idade" />
+                    <p>{errors.age}</p>
+                </div>
+                <div className="w-full">
+                    <label className="pl-2">Gênero</label>
+                    <input value={data.gender} onChange={(e) => setData({ ...data, gender: e.target.value })} className="border w-full p-3 rounded-lg" placeholder="Informe o gênero" />
+                    <p>{errors.gender}</p>
+                </div>
+                <button
+                    className="border p-2 rounded-lg m-10 w-[50%]  cursor-pointer"
+                    onClick={() => handleErrors(data)}
+                >Enviar</button>
+            </section>
+        </main >
     )
 }
